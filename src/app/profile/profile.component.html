@@ -19,6 +19,43 @@
       {{ role }}
     </li>
   </ul>
+  <div class="container">
+    <form
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="password">You can modify you password here</label>
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          [(ngModel)]="form.password"
+          required
+          minlength="6"
+          #password="ngModel"
+        />
+        <div class="alert-danger" *ngIf="password.errors && f.submitted">
+          <div *ngIf="password.errors.required">Password is required</div>
+          <div *ngIf="password.errors.minlength">
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block">Change me !</button>
+      </div>
+
+      <div class="alert alert-warning" *ngIf="f.submitted && isUpdateFailed">
+        Update failed!<br />{{ errorMessage }}
+      </div>
+      <div class="alert alert-success" *ngIf="f.submitted && !isUpdateFailed">
+        {{ successMessage }}
+      </div>
+    </form>
+  </div>
 </div>
 
 <ng-template #loggedOut>
