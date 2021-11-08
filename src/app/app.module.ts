@@ -14,6 +14,7 @@ import { BoardModeratorComponent } from './board-moderator/board-moderator.compo
 import { BoardUserComponent } from './board-user/board-user.component';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    CommonModule,
     HttpClientModule
   ],
   providers: [authInterceptorProviders],
