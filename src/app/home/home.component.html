@@ -1,12 +1,13 @@
 <div class="container">
   <div class="container">
     <div class="row mt-5">
-      <div class="col-6 pr-4 mr-4 border-right">
+      <div class="col-6 pr-4 mr-4 border-right" *ngIf="mainArticle && mainArticle.users">
+        <div *ngIf="!showCreateArticle; else elseTemplate">
         <div class="row">
           <h1 class="col-9">{{ mainArticle.name }}</h1>
           <div class="col-3">
-            <button type="button" class="btn btn-secondary btn-md mr-1"><i class="bi-file-earmark"></i></button>
-            <button type="button" class="btn btn-primary btn-md"><i class="bi-pencil"></i></button>
+            <button type="button" class="btn btn-secondary btn-md mr-1" (click)="showmeCreateArticle()"><i class="bi-file-earmark"></i></button>
+            <button type="button" class="btn btn-primary btn-md" (click)="showmeEditMainArticle()"><i class="bi-pencil"></i></button>
           </div>
         </div>
         <div class="row">
@@ -39,6 +40,25 @@
                 <input type="text" class="form-control mb-1" />
                 <button type="button" class="btn btn-primary btn-md">comment</button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #elseTemplate>
+        <div class="row mt-3">
+          <div class="col-sm">
+            <input type="text" class="form-control mb-2" placeholder="Name you article" [(ngModel)]="article.name" />
+            <textarea rows="10"class="form-control mb-2" style="height:100%;" placeholder="Specify the content of your article." [(ngModel)]="article.content"></textarea>
+            <button type="button" class="btn btn-primary btn-md mr-2" (click)="createArticle()">{{ (article.id ? 'Modify' : 'Add') + ' article' }}</button>
+            <button *ngIf="article.id" type="button" class="btn btn-danger btn-md mr-2" (click)="deleteArticle()">Delete article</button>
+            <button type="button" class="btn btn-secondary btn-md" (click)="hideCreateArticle()">Cancel</button>
+          </div>
+        </div>
+      </ng-template>
+      <div class="row mt-5" *ngIf="message">
+          <div class="col-sm">
+            <div [ngClass]="{ 'alert': true, 'alert-success': !isError, 'alert-danger': isError }" role="alert">
+              {{ message }}
             </div>
           </div>
         </div>
