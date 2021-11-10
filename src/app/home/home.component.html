@@ -37,8 +37,8 @@
             </div>
             <div class="row mt-3">
               <div class="col-sm">
-                <input type="text" class="form-control mb-1" />
-                <button type="button" class="btn btn-primary btn-md">comment</button>
+                <input type="text" class="form-control mb-1" [(ngModel)]="comment" />
+                <button type="button" class="btn btn-primary btn-md" (click)="createComment()">Comment</button>
               </div>
             </div>
           </div>

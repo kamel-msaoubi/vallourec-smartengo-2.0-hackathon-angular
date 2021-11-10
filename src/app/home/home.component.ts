@@ -15,9 +15,7 @@ export class HomeComponent implements OnInit {
     content: "",
     name: ""
   };
-  comment: any = {
-
-  };
+  comment: string = "";
   isError: boolean = false;
   message:string = "";
   mainArticle: any = {
@@ -25,7 +23,7 @@ export class HomeComponent implements OnInit {
       username: "John Doe"
     },
     name: "Article title",
-    id: 4,
+    id: 1,
     createdAt: new Date(),
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet.",
     comments: [
@@ -142,6 +140,19 @@ export class HomeComponent implements OnInit {
   }
 
   createComment() {
-    this.commentServices.create(this.comment);
+    const newComment = {
+      content: this.comment,
+      article: this.mainArticle
+    }
+    this.commentServices.create(newComment).subscribe((data) => {
+      this.mainArticle.comments.push(data.data.comment);
+      this.message = data.data.message;
+      this.comment = "";
+      this.clearMessage();
+    }, (error) => {
+      this.isError = true;
+      this.message = error.message;
+      this.clearMessage();
+    });
   }
 }

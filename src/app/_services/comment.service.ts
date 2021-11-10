@@ -14,9 +14,10 @@ const httpOptions = {
 export class CommentService {
   constructor(private http: HttpClient) { }
 
-  create({ content }: any): Observable<any> {
+  create({ content, article }: any): Observable<any> {
     return this.http.post(AUTH_API + 'create', {
-      content
+      content,
+      article
     }, httpOptions);
   }
 }
