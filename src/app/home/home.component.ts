@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticlesService } from '../_services/articles.service';
 import { CommentService } from '../_services/comment.service';
+import { ReactionService } from '../_services/reaction.service';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
     name: "Article title",
     id: 1,
     createdAt: new Date(),
+    reactions: [],
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet.",
     comments: [
       {
@@ -62,6 +64,7 @@ export class HomeComponent implements OnInit {
   constructor(private userService: UserService,
     private articlesServices: ArticlesService,
     private commentServices: CommentService,
+    private reactionServices: ReactionService,
     ) { }
 
   ngOnInit(): void {
@@ -154,5 +157,34 @@ export class HomeComponent implements OnInit {
       this.message = error.message;
       this.clearMessage();
     });
+  }
+
+  createReaction(type: string) {
+    const newReaction = {
+      type: type,
+      article: this.mainArticle
+    }
+    this.reactionServices.create(newReaction).subscribe((data) => {
+      this.mainArticle.reactions.push(data.data.reaction);
+      this.message = data.data.message;
+      this.comment = "";
+      this.clearMessage();
+    }, (error) => {
+      this.isError = true;
+      this.message = error.message;
+      this.clearMessage();
+    });
+  }
+
+  getHearths(){
+    return this.mainArticle.reactions.filter((r: any) => r.type == 'heart').length;
+  }
+
+  getLightbulb(){
+    return this.mainArticle.reactions.filter((r: any) => r.type == 'lightbulb').length;
+  }
+
+  getHands(){
+    return this.mainArticle.reactions.filter((r: any) => r.type == 'hand-thumbs-up').length;
   }
 }

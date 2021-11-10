@@ -22,9 +22,9 @@
           </div>
         </div>
         <div class="row d-flex flex-row-reverse bd-highlight my-1 mr-2">
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-heart"></i></button>
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-lightbulb"></i></button>
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-hand-thumbs-up"></i></button>
+          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-heart" (click)="createReaction('heart')"></i>  <span class="badge badge-light">{{ getHearths() }}</span></button>
+          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-lightbulb" (click)="createReaction('lightbulb')"></i>  <span class="badge badge-light">{{ getLightbulb() }}</span></button>
+          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-hand-thumbs-up" (click)="createReaction('hand-thumbs-up')"></i>  <span class="badge badge-light">{{ getHands() }}</span></button>
         </div>
         <div class="row mt-5">
           <div class="col-sm">
