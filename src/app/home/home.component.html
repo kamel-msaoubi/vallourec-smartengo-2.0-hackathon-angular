@@ -8,7 +8,7 @@
             <div class="col-3">
               <button type="button" class="btn btn-secondary btn-md mr-1" (click)="showmeCreateArticle()"><i
                   class="bi-file-earmark"></i></button>
-              <button type="button" class="btn btn-primary btn-md" (click)="showmeEditMainArticle()"><i
+              <button type="button" class="btn btn-primary btn-md" *ngIf="canEditMainArticle()" (click)="showmeEditMainArticle()"><i
                   class="bi-pencil"></i></button>
             </div>
           </div>
@@ -111,7 +111,7 @@
           <div class="col-4">
             <div class="form-group">
               <label for="exampleFormControlSelect3">Order by</label>
-              <select class="form-control" id="exampleFormControlSelect3" (ngModel)="orderBy"
+              <select class="form-control" id="exampleFormControlSelect3" [(ngModel)]="orderBy"
                 (ngModelChange)="search($event)">
                 <option [ngValue]="'u'">UserName</option>
                 <option [ngValue]="'t'">Title</option>
@@ -130,7 +130,7 @@
             </div>
           </div>
           <div class="row d-flex flex-row-reverse bd-highlight my-1">
-            <button type="button" class="btn btn-primary btn-md mr-1">Load more</button>
+            <button type="button" class="btn btn-primary btn-md mr-1" (click)="loadMore()">Load more</button>
           </div>
         </div>
       </div>

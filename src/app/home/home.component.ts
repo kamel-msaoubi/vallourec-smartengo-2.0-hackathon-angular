@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ArticlesService } from '../_services/articles.service';
 import { CommentService } from '../_services/comment.service';
 import { ReactionService } from '../_services/reaction.service';
+import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -18,11 +19,11 @@ export class HomeComponent implements OnInit {
   };
   tags: any = [];
   filterTag: any = {};
-  pre:string = "";
+  pre: string = "";
   orderBy: string = "";
   comment: string = "";
   isError: boolean = false;
-  message:string = "";
+  message: string = "";
   mainArticle: any = {
     users: {
 
@@ -35,7 +36,8 @@ export class HomeComponent implements OnInit {
     private articlesServices: ArticlesService,
     private commentServices: CommentService,
     private reactionServices: ReactionService,
-    ) { }
+    private tokenStorageService: TokenStorageService
+  ) { }
 
   ngOnInit(): void {
     this.userService.getPublicContent().subscribe(
@@ -52,6 +54,16 @@ export class HomeComponent implements OnInit {
     });
 
     this.search(null);
+  }
+
+  canEditMainArticle() {
+    const user = this.tokenStorageService.getUser();
+    if (user.roles.includes('ROLE_ADMIN')) {
+      return true;
+    } else if (this.mainArticle && this.mainArticle.users && this.mainArticle.users.id == user.id) {
+      return true;
+    }
+    return false;
   }
 
   showmeCreateArticle() {
@@ -125,6 +137,8 @@ export class HomeComponent implements OnInit {
       article: this.mainArticle
     }
     this.commentServices.create(newComment).subscribe((data) => {
+      if(!this.mainArticle.comments)
+      this.mainArticle.comments = [];
       this.mainArticle.comments.push(data.data.comment);
       this.message = data.data.message;
       this.comment = "";
@@ -142,6 +156,8 @@ export class HomeComponent implements OnInit {
       article: this.mainArticle
     }
     this.reactionServices.create(newReaction).subscribe((data) => {
+      if(!this.mainArticle.reactions)
+      this.mainArticle.reactions = [];
       this.mainArticle.reactions.push(data.data.reaction);
       this.message = data.data.message;
       this.comment = "";
@@ -153,22 +169,22 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getHearths(){
+  getHearths() {
     return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'heart').length : null;
   }
 
-  getLightbulb(){
+  getLightbulb() {
     return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'lightbulb').length : null;
   }
 
-  getHands(){
+  getHands() {
     return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'hand-thumbs-up').length : null;
   }
 
   search(event: any) {
     console.log(this.filterTag);
     this.articlesServices.list(this.pre, this.filterTag, this.orderBy, this.page).subscribe((data) => {
-      this.articles = data.data.articles;
+      this.articles = this.articles.concat(data.data.articles);
     });
   }
 
