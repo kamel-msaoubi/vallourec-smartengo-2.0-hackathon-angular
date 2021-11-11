@@ -16,50 +16,20 @@ export class HomeComponent implements OnInit {
     content: "",
     name: ""
   };
+  tags: any = [];
+  filterTag: any = {};
+  pre:string = "";
+  orderBy: string = "";
   comment: string = "";
   isError: boolean = false;
   message:string = "";
   mainArticle: any = {
     users: {
-      username: "John Doe"
-    },
-    name: "Article title",
-    id: 1,
-    createdAt: new Date(),
-    reactions: [],
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet.",
-    comments: [
-      {
-        users: {
-          username: "Keanue Reaves"
-        },
-        content: "Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-      },
-      {
-        users: {
-          username: "Michel Platini"
-        },
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan."
-      }
-    ]
+
+    }
   };
-  articles: any = [{
-    title: 'Test A',
-    createdAt: new Date(),
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet."
-  }, {
-    title: 'Test B',
-    createdAt: new Date(),
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet."
-  }, {
-    title: 'Test C',
-    createdAt: new Date(),
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet."
-  }, {
-    title: 'Test D',
-    createdAt: new Date(),
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper velit quis lectus volutpat, eget pulvinar felis accumsan. Sed suscipit felis et diam pretium, ac ullamcorper turpis porttitor. Nam id mauris at ante fringilla porta. Praesent sodales felis lacus, sed porttitor dolor vulputate vel. Aenean a mi felis. Cras ultricies urna sed risus pharetra, in aliquet justo ultrices. Aenean blandit, ex et facilisis cursus, arcu ligula tempor sem, quis blandit mauris tortor ut metus. Morbi pulvinar felis tempus blandit rutrum. Sed pharetra pretium velit eget lobortis. Sed maximus lacus ac egestas laoreet."
-  }];
+  articles: any = [];
+  page: number = 0;
 
   constructor(private userService: UserService,
     private articlesServices: ArticlesService,
@@ -76,15 +46,22 @@ export class HomeComponent implements OnInit {
         this.content = JSON.parse(err.error).message;
       }
     );
+
+    this.articlesServices.findAllTags().subscribe(data => {
+      this.tags = data.data.tags;
+    });
+
+    this.search(null);
   }
 
   showmeCreateArticle() {
     this.showCreateArticle = true;
+    this.article = {};
   }
 
   showmeEditMainArticle() {
-    this.article = this.mainArticle;
     this.showmeCreateArticle();
+    this.article = this.mainArticle;
   }
 
   hideCreateArticle() {
@@ -177,14 +154,30 @@ export class HomeComponent implements OnInit {
   }
 
   getHearths(){
-    return this.mainArticle.reactions.filter((r: any) => r.type == 'heart').length;
+    return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'heart').length : null;
   }
 
   getLightbulb(){
-    return this.mainArticle.reactions.filter((r: any) => r.type == 'lightbulb').length;
+    return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'lightbulb').length : null;
   }
 
   getHands(){
-    return this.mainArticle.reactions.filter((r: any) => r.type == 'hand-thumbs-up').length;
+    return this.mainArticle && this.mainArticle.reactions ? this.mainArticle.reactions.filter((r: any) => r.type == 'hand-thumbs-up').length : null;
+  }
+
+  search(event: any) {
+    console.log(this.filterTag);
+    this.articlesServices.list(this.pre, this.filterTag, this.orderBy, this.page).subscribe((data) => {
+      this.articles = data.data.articles;
+    });
+  }
+
+  loadMore() {
+    this.page++;
+    this.search(null);
+  }
+
+  loadArticle(article: any) {
+    this.mainArticle = article;
   }
 }

@@ -3,59 +3,77 @@
     <div class="row mt-5">
       <div class="col-6 pr-4 mr-4 border-right" *ngIf="mainArticle && mainArticle.users">
         <div *ngIf="!showCreateArticle; else elseTemplate">
-        <div class="row">
-          <h1 class="col-9">{{ mainArticle.name }}</h1>
-          <div class="col-3">
-            <button type="button" class="btn btn-secondary btn-md mr-1" (click)="showmeCreateArticle()"><i class="bi-file-earmark"></i></button>
-            <button type="button" class="btn btn-primary btn-md" (click)="showmeEditMainArticle()"><i class="bi-pencil"></i></button>
+          <div class="row">
+            <h1 class="col-9">{{ mainArticle.name }}</h1>
+            <div class="col-3">
+              <button type="button" class="btn btn-secondary btn-md mr-1" (click)="showmeCreateArticle()"><i
+                  class="bi-file-earmark"></i></button>
+              <button type="button" class="btn btn-primary btn-md" (click)="showmeEditMainArticle()"><i
+                  class="bi-pencil"></i></button>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm">
-            <h4>Author: {{ mainArticle.users.username }} ~ Published at
-              {{ mainArticle.createdAt | date: 'mediumDate': 'Europe/Paris' }}</h4>
+          <div class="row">
+            <div class="col-sm">
+              <h4>Author: {{ mainArticle.users.username }} ~ Published at
+                {{ mainArticle.createdAt | date: 'mediumDate': 'Europe/Paris' }}</h4>
+            </div>
           </div>
-        </div>
-        <div class="row text-justify">
-          <div class="col-sm">
-            {{ mainArticle.content }}
+          <div class="row text-justify">
+            <div class="col-sm">
+              {{ mainArticle.content }}
+            </div>
           </div>
-        </div>
-        <div class="row d-flex flex-row-reverse bd-highlight my-1 mr-2">
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-heart" (click)="createReaction('heart')"></i>  <span class="badge badge-light">{{ getHearths() }}</span></button>
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-lightbulb" (click)="createReaction('lightbulb')"></i>  <span class="badge badge-light">{{ getLightbulb() }}</span></button>
-          <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-hand-thumbs-up" (click)="createReaction('hand-thumbs-up')"></i>  <span class="badge badge-light">{{ getHands() }}</span></button>
-        </div>
-        <div class="row mt-5">
-          <div class="col-sm">
-            <div class="row">
-              <div *ngFor="let com of mainArticle.comments" class="col-12 mt-3">
-                <div class="float-right text-capitalize text-success">{{ com.users.username}}
+          <div class="row d-flex flex-row-reverse bd-highlight my-1 mr-2">
+            <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-heart"
+                (click)="createReaction('heart')"></i> <span
+                class="badge badge-light">{{ getHearths() }}</span></button>
+            <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-lightbulb"
+                (click)="createReaction('lightbulb')"></i> <span
+                class="badge badge-light">{{ getLightbulb() }}</span></button>
+            <button type="button" class="btn btn-primary btn-sm mr-1"><i class="bi-hand-thumbs-up"
+                (click)="createReaction('hand-thumbs-up')"></i> <span
+                class="badge badge-light">{{ getHands() }}</span></button>
+          </div>
+          <div class="row mt-5">
+            <div class="col-sm">
+              <div class="row">
+                <div *ngFor="let com of mainArticle.comments" class="col-12 mt-3">
+                  <div class="float-right text-capitalize text-success">{{ com.users.username}}
+                  </div>
+                  <div>{{ com.content }}</div>
                 </div>
-                <div>{{ com.content }}</div>
               </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-sm">
-                <textarea rows="3"class="form-control mb-2" style="height:100%;" placeholder="Add a comment" [(ngModel)]="comment"></textarea>
-                <button type="button" class="btn btn-primary btn-md mt-2" (click)="createComment()">Comment</button>
+              <div class="row mt-3">
+                <div class="col-sm">
+                  <textarea rows="3" class="form-control mb-2" style="height:100%;" placeholder="Add a comment"
+                    [(ngModel)]="comment"></textarea>
+                  <button type="button" class="btn btn-primary btn-md mt-2" (click)="createComment()">Comment</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <ng-template #elseTemplate>
-        <div class="row mt-3">
-          <div class="col-sm">
-            <input type="text" class="form-control mb-2" placeholder="Name you article" [(ngModel)]="article.name" />
-            <textarea rows="10"class="form-control mb-2" style="height:100%;" placeholder="Specify the content of your article." [(ngModel)]="article.content"></textarea>
-            <button type="button" class="btn btn-primary btn-md mr-2" (click)="createArticle()">{{ (article.id ? 'Modify' : 'Add') + ' article' }}</button>
-            <button *ngIf="article.id" type="button" class="btn btn-danger btn-md mr-2" (click)="deleteArticle()">Delete article</button>
-            <button type="button" class="btn btn-secondary btn-md" (click)="hideCreateArticle()">Cancel</button>
+        <ng-template #elseTemplate>
+          <div class="row mt-3">
+            <div class="col-sm">
+              <input type="text" class="form-control mb-2" placeholder="Name you article" [(ngModel)]="article.name" />
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Pick-up a tag</label>
+                <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="article.tags" multiple>
+                  <option *ngFor="let tag of tags" (value)="tag">{{ tag.title }}</option>
+                </select>
+              </div>
+              <textarea rows="10" class="form-control mb-2" style="height:100%;"
+                placeholder="Specify the content of your article." [(ngModel)]="article.content"></textarea>
+              <button type="button" class="btn btn-primary btn-md mr-2"
+                (click)="createArticle()">{{ (article.id ? 'Modify' : 'Add') + ' article' }}</button>
+              <button *ngIf="article.id" type="button" class="btn btn-danger btn-md mr-2"
+                (click)="deleteArticle()">Delete article</button>
+              <button type="button" class="btn btn-secondary btn-md" (click)="hideCreateArticle()">Cancel</button>
+            </div>
           </div>
-        </div>
-      </ng-template>
-      <div class="row mt-5" *ngIf="message">
+        </ng-template>
+        <div class="row mt-5" *ngIf="message">
           <div class="col-sm">
             <div [ngClass]="{ 'alert': true, 'alert-success': !isError, 'alert-danger': isError }" role="alert">
               {{ message }}
@@ -68,43 +86,38 @@
           <div class="col-12">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1"><i
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1" (click)="search(null)"><i
                     class="bi-search"></i></button>
               </div>
               <input type="text" class="form-control" placeholder="Search ..." aria-label="Search"
-                aria-describedby="button-addon1">
+                aria-describedby="button-addon1" [(ngModel)]="pre">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-8">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1"><i
-                    class="bi-search"></i></button>
-              </div>
-              <input type="text" class="form-control" placeholder="Search by tags..." aria-label="Search by tags"
-                aria-describedby="button-addon1">
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Filter by tag</label>
+              <select class="form-control" id="exampleFormControlSelect2" [(ngModel)]="filterTag" (ngModelChange)="search($event)">
+                <option *ngFor="let tag of tags" [ngValue]="tag">{{ tag.title }}</option>
+              </select>
             </div>
           </div>
           <div class="col-4">
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-expanded="false">
-                Filter by
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Username</a>
-                <a class="dropdown-item" href="#">Title</a>
-                <a class="dropdown-item" href="#">Modified at</a>
-              </div>
+            <div class="form-group">
+              <label for="exampleFormControlSelect3">Order by</label>
+              <select class="form-control" id="exampleFormControlSelect3" (ngModel)="orderBy" (ngModelChange)="search($event)">
+                <option [ngValue]="'u'">UserName</option>
+                <option [ngValue]="'t'">Title</option>
+                <option [ngValue]="'c'">Created At</option>
+              </select>
             </div>
           </div>
         </div>
         <div>
-          <div *ngFor="let article of articles" class="row">
+          <div *ngFor="let article of articles" class="row" (click)="loadArticle(article)" style="cursor: pointer">
             <h2>
-              {{ article.title }}
+              {{ article.name }}
             </h2>
             <div class="text-justify">
               {{ article.content }}
