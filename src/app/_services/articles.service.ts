@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const ARTICLE_API = 'http://localhost:8000/api/article/';
+const ARTICLE_API = 'http://localhost:8001/api/article/';
 
 const httpOptions = {
   headers: new HttpHeaders()
@@ -34,7 +34,7 @@ export class ArticlesService {
   }
 
   findAllTags(): Observable<any> {
-    return this.http.get('http://localhost:8000/api/tags/' + 'list', httpOptions);
+    return this.http.get('http://localhost:8001/api/tags/' + 'list', httpOptions);
   }
 
   list(pre: string, tag: any, orderby: string, page: number): Observable<any> {

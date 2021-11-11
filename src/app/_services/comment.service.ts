@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const COMMENT_API = 'http://localhost:8000/api/comment/';
+const COMMENT_API = 'http://localhost:8001/api/comment/';
 
 const httpOptions = {
   headers: new HttpHeaders()

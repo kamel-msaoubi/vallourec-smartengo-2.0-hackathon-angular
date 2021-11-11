@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const REACTION_API = 'http://localhost:8000/api/reaction/';
+const REACTION_API = 'http://localhost:8001/api/reaction/';
 
 const httpOptions = {
   headers: new HttpHeaders()
