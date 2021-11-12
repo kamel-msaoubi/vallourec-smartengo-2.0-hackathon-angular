@@ -182,15 +182,17 @@ export class HomeComponent implements OnInit {
   }
 
   search(event: any) {
-    console.log(this.filterTag);
+    this.page = 0;
     this.articlesServices.list(this.pre, this.filterTag, this.orderBy, this.page).subscribe((data) => {
-      this.articles = this.articles.concat(data.data.articles);
+      this.articles = data.data.articles;
     });
   }
 
   loadMore() {
     this.page++;
-    this.search(null);
+    this.articlesServices.list(this.pre, this.filterTag, this.orderBy, this.page).subscribe((data) => {
+      this.articles = this.articles.concat(data.data.articles);
+    });
   }
 
   loadArticle(article: any) {
